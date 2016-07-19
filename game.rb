@@ -5,14 +5,12 @@ require_relative 'errors'
 
 class Game
 
-  # @player1 = HumanPlayer.new("Greg", @display, :white)
-  # @player2 = HumanPlayer.new("Robert", @display, :black)
-
   def initialize(players)
     @board = Board.new
     @errors = []
     @current_piece = [nil]
-    @display = Display.new(@board, @errors, @current_piece)
+    @valid_moves = []
+    @display = Display.new(@board, @errors, @current_piece, @valid_moves)
     @players = players.map {|info| HumanPlayer.new(info[0], @display, info[1])}
   end
 
@@ -35,6 +33,7 @@ class Game
   private
 
   def start_play
+    @valid_moves.clear
     @current_piece[0] = nil
     @errors << InCheckError.new if  @board.in_check?(current_player.color)
     start = current_player.get_move
@@ -56,6 +55,8 @@ class Game
   end
 
   def end_play(pos)
+    moves = @board[pos].moves(pos)
+    @valid_moves.concat(moves)
     finish = current_player.get_move
     in_check = @board.in_check?(current_player.color)
     @errors << InCheckError.new if in_check
@@ -100,7 +101,6 @@ class Game
   end
 
 end
-
 
 
 if __FILE__ == $PROGRAM_NAME

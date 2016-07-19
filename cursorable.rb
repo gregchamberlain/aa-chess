@@ -45,6 +45,12 @@ module Cursorable
     when :escape
       return :reset
     when :left, :right, :up, :down
+      if [:left, :down].include?(key)
+        @valid_moves.rotate!(-1)
+      else
+        @valid_moves.rotate!
+      end
+
       update_pos(MOVES[key])
       nil
     else
@@ -69,7 +75,11 @@ module Cursorable
   end
 
   def update_pos(diff)
-    new_pos = [@cursor_pos[0] + diff[0], @cursor_pos[1] + diff[1]]
+    if @valid_moves.empty?
+      new_pos = [@cursor_pos[0] + diff[0], @cursor_pos[1] + diff[1]]
+    else
+      new_pos = @valid_moves[0]
+    end
     @cursor_pos = new_pos if @board.in_bounds?(new_pos)
   end
 end
