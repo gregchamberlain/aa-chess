@@ -1,4 +1,5 @@
 require_relative 'piece'
+# require_relative 'king'
 
 class Steppable < Piece
 
@@ -10,7 +11,12 @@ class Steppable < Piece
       pos.first.between?(0,7) && pos.last.between?(0,7) &&
       @board[pos].color != self.color
     end
+
   end
+
+
+
+
 
 
 

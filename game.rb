@@ -34,6 +34,8 @@ class Game
 
   def start_play
     @current_piece[0] = nil
+    in_check = @board.in_check?(current_player.color)
+    @errors << InCheckError.new if in_check
     start = current_player.get_move
     raise BadSelectError if start == :reset
     piece = @board[start]
@@ -57,6 +59,9 @@ class Game
     raise BadSelectError if finish == :reset
     piece = @board[pos]
     raise InvalidMoveError unless piece.moves(pos).include?(finish)
+    # if @board.in_check?(current_player.color)
+    #   raise InvalidMoveError if  @board.simulate_move(pos, finish).in_check?(current_player.color)
+    # end
     piece.make_move
     @board.take_piece(finish)
     @board.move_piece(pos, finish)
@@ -85,8 +90,7 @@ class Game
   end
 
   def won?
-    # @board.checkmate?(:black) || @board.checkmate?(:white)
-    false
+    @board.checkmate?(current_player.color)
   end
 
 
