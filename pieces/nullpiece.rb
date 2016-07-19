@@ -14,4 +14,8 @@ class NullPiece
   def valid_move(pos)
     false
   end
+
+  def color
+    false
+  end
 end

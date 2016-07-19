@@ -22,7 +22,7 @@ class Board
 
   def self.emptyBoard
     grid = []
-    nullpiece = NullPiece.instance
+    @nullpiece = NullPiece.instance
     (0..7).each do |idx1|
       row = []
       (0..7).each do |idx2|
@@ -36,7 +36,7 @@ class Board
         when 7
           row << FACE_PIECE.reverse[idx2].new(:black)
         else
-          row << nullpiece
+          row << @nullpiece
         end
       end
       grid << row
@@ -50,6 +50,11 @@ class Board
 
   def rows
     @grid
+  end
+
+  def take_piece(pos)
+    return if self[pos].is_a?(NullPiece)
+    self[pos] = @nullpiece
   end
 
   def any_between?(start, finish)

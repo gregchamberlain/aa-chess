@@ -16,9 +16,5 @@ class Piece
 
   end
 
-  def move_into_check
-    # check if move results in king being place in check
-  end
-
 
 end

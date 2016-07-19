@@ -44,6 +44,8 @@ class Game
     piece = @board[pos]
     raise InvalidMoveError unless piece.moves(pos).include?(finish)
     raise InvalidMoveError if @board.any_between?(pos, finish)
+    raise InvalidMoveError if @board[finish].color == piece.color
+    @board.take_piece(finish)
     @board.move_piece(pos, finish)
   rescue InvalidMoveError => e
     @errors << e
