@@ -4,9 +4,15 @@ require_relative "cursorable"
 class Display
   include Cursorable
 
-  def initialize(board)
+  def initialize(board, errors)
+    @errors = errors
     @board = board
-    @cursor_pos = [0, 0]
+    @cursor_pos = [1, 3]
+  end
+
+  def set_cursor(pos)
+    x, y = pos
+    @cursor_pos[0], @cursor_pos[1] = x, y
   end
 
   def build_grid
@@ -26,17 +32,19 @@ class Display
     if [i, j] == @cursor_pos
       bg = :light_red
     elsif (i + j).odd?
-      bg = :light_blue
+      bg = :light_black
     else
-      bg = :blue
+      bg = :white
     end
-    { background: bg, color: :white }
+    { background: bg }
   end
 
   def render
-    # system("clear")
+    system("clear")
     puts "Fill the grid!"
     puts "Arrow keys, WASD, or vim to move, space or enter to confirm."
+    @errors.each { |e| puts e.message }
     build_grid.each { |row| puts row.join }
+    @errors.clear
   end
 end

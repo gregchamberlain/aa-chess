@@ -1,4 +1,4 @@
-require_relative 'Slidable'
+require_relative 'slidable'
 
 class Rook < Slidable
 
@@ -6,7 +6,7 @@ class Rook < Slidable
 
   def initialize(color)
     super
-    @symbol = color == :black ? "\u265C" : "\u2656"
+    @symbol = "\u265C"
   end
 
   def self.move_dirs

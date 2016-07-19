@@ -1,5 +1,5 @@
-require_relative 'Piece'
-require_relative 'Steppable'
+require_relative 'piece'
+require_relative 'steppable'
 
 class King < Steppable
 
@@ -7,7 +7,7 @@ class King < Steppable
 
   def initialize(color)
     super
-    @symbol = color == :black ? "\u265A" : "\u2654"
+    @symbol = "\u265A"
   end
 
   def self.moves_diffs

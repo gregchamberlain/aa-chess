@@ -1,4 +1,4 @@
-require_relative 'Slidable'
+require_relative 'slidable'
 
 class Queen < Slidable
 
@@ -6,7 +6,7 @@ class Queen < Slidable
 
   def initialize(color)
     super
-    @symbol = color == :black ? "\u265B" : "\u2655"
+    @symbol = "\u265B"
   end
 
   def self.move_dirs

@@ -1,4 +1,4 @@
-require_relative 'Piece'
+require_relative 'piece'
 
 class Pawn < Piece
 
@@ -6,7 +6,7 @@ class Pawn < Piece
 
   def initialize(color)
     super
-    @symbol = color == :black ? "\u265F" : "\u2659"
+    @symbol = "\u265F"
     @first_move = true
   end
 

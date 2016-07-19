@@ -1,4 +1,4 @@
-require_relative 'Slidable'
+require_relative 'slidable'
 
 class Bishop < Slidable
 
@@ -6,7 +6,7 @@ class Bishop < Slidable
 
   def initialize(color)
     super
-    @symbol = color == :black ? "\u265D" : "\u2657"
+    @symbol = "\u265D"
   end
 
   def self.move_dirs

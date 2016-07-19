@@ -1,3 +1,5 @@
+require 'colorize'
+
 class Piece
 
   attr_reader :color
@@ -7,7 +9,7 @@ class Piece
   end
 
   def to_s
-    " #{symbol} "
+    " #{symbol} ".colorize(@color == :white ? :light_white : :black)
   end
 
   def valid_move

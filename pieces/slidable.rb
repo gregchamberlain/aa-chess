@@ -1,4 +1,4 @@
-require_relative 'Piece'
+require_relative 'piece'
 
 class Slidable < Piece
 
@@ -18,6 +18,7 @@ class Slidable < Piece
 
   def diagonals(pos)
     x, y = pos
+    pos.min.downto(0)
     (0...8).to_a.inject([]) do |acc, num|
       acc << [(x+num) % 8, (y+num) % 8]
     end
