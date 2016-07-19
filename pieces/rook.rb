@@ -10,7 +10,7 @@ class Rook < Slidable
   end
 
   def self.move_dirs
-    [:vertical, :horizontal]
+    [:flats]
   end
 
 end

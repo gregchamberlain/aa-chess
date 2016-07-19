@@ -4,16 +4,28 @@ require 'byebug'
 
 class Slidable < Piece
 
+  FLATS = [
+    [0,1],
+    [0,-1],
+    [1,0],
+    [-1,0]
+  ]
+
+  DIAGONALS = [
+    [1,1],
+    [1,-1],
+    [-1,1],
+    [-1,-1],
+  ]
+
   def moves(pos)
     x, y = pos
     self.class.move_dirs.inject([]) do |moves, dir|
       case dir
       when :diagonal
         moves + diagonals(pos)
-      when :horizontal
-        moves + rows(pos)
-      when :vertical
-        moves + cols(pos)
+      when :flats
+        moves + flats(pos)
       end
     end
   end
@@ -29,31 +41,13 @@ class Slidable < Piece
     [new_pos] + crawl(new_pos, diff)
   end
 
-  def rows(pos)
-    moves = []
-    moves.concat(crawl(pos, [0,1]))
-    moves.concat(crawl(pos, [0,-1]))
-    moves.concat(crawl(pos, [0,1]))
-    moves.concat(crawl(pos, [0,-1]))
-    moves
-  end
 
-  def cols(pos)
-    moves = []
-    moves.concat(crawl(pos, [1,0]))
-    moves.concat(crawl(pos, [1,0]))
-    moves.concat(crawl(pos, [-1,0]))
-    moves.concat(crawl(pos, [-1,0]))
-    moves
+  def flats(pos)
+    FLATS.inject([]) {|moves, diff| moves.concat(crawl(pos, diff))}
   end
 
   def diagonals(pos)
-    moves = []
-    moves.concat(crawl(pos, [1,1]))
-    moves.concat(crawl(pos, [1,-1]))
-    moves.concat(crawl(pos, [-1,1]))
-    moves.concat(crawl(pos, [-1,-1]))
-    moves
+    DIAGONALS.inject([]) {|moves, diff| moves.concat(crawl(pos, diff))}
   end
 
 end

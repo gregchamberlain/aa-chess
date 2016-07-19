@@ -72,17 +72,6 @@ class Board
     false
   end
 
-  # def simulate_move(start, finish)
-  #   next_board = Board.new(deep_dup(@grid))
-  #   next_board.take_piece(finish)
-  #   next_board.make_move(start, finish)
-  #   next_board
-  # end
-  #
-  # def deep_dup(array)
-  #   array.dup.map { |el| el.is_a?(Array) ? deep_dup(el) : el }
-  # end
-
   def checkmate?(color)
     king_pos = get_king_position(color)
     check_pos = in_check?(color, king_pos)
@@ -129,7 +118,6 @@ class Board
     end
   end
 
-
   def will_block?(start, finish, pos)
     rows = [start[0], finish[0]]
     cols = [start[1], finish[1]]
@@ -149,8 +137,5 @@ class Board
       return pos if piece.is_a?(King) && piece.color == color
     end
   end
-
-
-
 
 end

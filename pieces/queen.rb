@@ -10,7 +10,7 @@ class Queen < Slidable
   end
 
   def self.move_dirs
-    [:vertical, :horizontal, :diagonal]
+    [:flats, :diagonal]
   end
 
 end

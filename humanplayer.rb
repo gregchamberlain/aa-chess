@@ -11,11 +11,11 @@ class HumanPlayer
   def get_move
     move = nil
     @display.render
-    puts "#{color}'s Turn"
+    puts "#{name}'s Turn"
     until move
       move = @display.get_input
       @display.render
-      puts "#{color}'s Turn"
+      puts "#{name}'s Turn"
     end
     move
   end

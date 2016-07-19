@@ -3,17 +3,17 @@ require_relative 'display'
 require_relative 'humanplayer'
 require_relative 'errors'
 
-
 class Game
 
-  def initialize
+  # @player1 = HumanPlayer.new("Greg", @display, :white)
+  # @player2 = HumanPlayer.new("Robert", @display, :black)
+
+  def initialize(players)
     @board = Board.new
     @errors = []
     @current_piece = [nil]
     @display = Display.new(@board, @errors, @current_piece)
-    @player1 = HumanPlayer.new("Greg", @display, :white)
-    @player2 = HumanPlayer.new("Robert", @display, :black)
-    @players = [@player1, @player2]
+    @players = players.map {|info| HumanPlayer.new(info[0], @display, info[1])}
   end
 
   def play
@@ -62,8 +62,8 @@ class Game
     raise BadSelectError if finish == :reset
     piece = @board[pos]
     raise InvalidMoveError unless piece.moves(pos).include?(finish)
-    @board.move_piece(pos, finish)
     taken_piece = @board[finish]
+    @board.move_piece(pos, finish)
     @board.take_piece(pos)
     if @board.in_check?(current_player.color)
       @board.move_piece(finish, pos)
@@ -71,7 +71,6 @@ class Game
       raise BadSelectError
     end
     piece.make_move
-    # @board.move_piece(pos, finish)
   rescue InvalidMoveError => e
     @errors << e
     retry
@@ -100,13 +99,18 @@ class Game
     @board.checkmate?(current_player.color)
   end
 
-
-
-
-
 end
 
+
+
 if __FILE__ == $PROGRAM_NAME
-  g = Game.new
+  players = []
+  2.times do |i|
+    color = i == 0 ? :white : :black
+    puts "Please input player #{i+1} name"
+    name = gets.chomp
+    players << [name, color]
+  end
+  g = Game.new(players)
   g.play
 end

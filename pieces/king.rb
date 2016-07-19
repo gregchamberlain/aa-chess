@@ -23,9 +23,4 @@ class King < Steppable
     ]
   end
 
-  def moves(pos)
-    move = super(pos)
-    move.reject { |pos| @board.in_check?(color, pos) }
-  end
-
 end
