@@ -9,7 +9,8 @@ class Game
   def initialize
     @board = Board.new
     @errors = []
-    @display = Display.new(@board, @errors)
+    @current_piece = [nil]
+    @display = Display.new(@board, @errors, @current_piece)
     @player1 = HumanPlayer.new("Greg", @display, :white)
     @player2 = HumanPlayer.new("Robert", @display, :black)
     @players = [@player1, @player2]
@@ -17,18 +18,30 @@ class Game
 
   def play
     until won?
-      pos = start_play
-      end_play(pos)
-      switch_players
-      set_cursor
+      begin
+        pos = start_play
+        end_play(pos)
+      rescue BadSelectError => e
+        retry
+      ensure
+        switch_players
+        set_cursor
+      end
     end
+    @display.render
+    puts "#{current_player.name}, you've lost!"
   end
 
   def start_play
+    @current_piece[0] = nil
     start = current_player.get_move
+    raise BadSelectError if start == :reset
     piece = @board[start]
     raise NullPieceError if piece.is_a?(NullPiece)
     raise WrongPlayerError if piece.color != current_player.color
+    @current_piece[0] = piece
+  rescue BadSelectError
+    retry
   rescue NullPieceError => e
     @errors << e
     retry
@@ -41,6 +54,7 @@ class Game
 
   def end_play(pos)
     finish = current_player.get_move
+    raise BadSelectError if finish == :reset
     piece = @board[pos]
     raise InvalidMoveError unless piece.moves(pos).include?(finish)
     piece.make_move
@@ -71,6 +85,7 @@ class Game
   end
 
   def won?
+    # @board.checkmate?(:black) || @board.checkmate?(:white)
     false
   end
 

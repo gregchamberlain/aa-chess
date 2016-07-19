@@ -15,3 +15,9 @@ class InvalidMoveError < StandardError
     "That piece cannot move there!"
   end
 end
+
+class BadSelectError < StandardError
+  def message
+    "Reset selections"
+  end
+end

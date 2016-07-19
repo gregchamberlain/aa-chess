@@ -3,7 +3,7 @@ require 'singleton'
 
 class NullPiece
   include Singleton
-  def moves
+  def moves(pos)
     []
   end
 

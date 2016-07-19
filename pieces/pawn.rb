@@ -12,26 +12,28 @@ class Pawn < Piece
   end
 
   def moves(pos)
-    modifier = @color == :black ? -1 : 1
-    possible_moves(pos, modifier) + attack_moves(pos, modifier)
+    possible_moves(pos) + attack_moves(pos)
   end
 
   def make_move
     @first_move = false
   end
 
-  def possible_moves(pos, modifier)
+  def possible_moves(pos)
     x, y = pos
+    modifier = @color == :black ? -1 : 1
     @first_move ? [[ x+1 * modifier, y],[x+2 * modifier, y]] :
     [[x+1 * modifier, y]]
   end
 
-  def attack_moves(pos, modifier)
+  def attack_moves(pos)
     x, y = pos
-    [[ x+1 * modifier, y-1],[x+1 * modifier, y+1]].select do |pos|
+    modifier = @color == :black ? -1 : 1
+    moves = [[ x+1 * modifier, y-1],[x+1 * modifier, y+1]].select do |pos|
       piece = @board[pos]
-      piece.color != self.color && !piece.is_a?(NullPiece)
+      !piece.nil? && piece.color != self.color && !piece.is_a?(NullPiece)
     end
+    moves
   end
 
 end

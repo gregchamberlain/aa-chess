@@ -4,8 +4,9 @@ require_relative "cursorable"
 class Display
   include Cursorable
 
-  def initialize(board, errors)
+  def initialize(board, errors, current_piece)
     @errors = errors
+    @current_piece = current_piece
     @board = board
     @cursor_pos = [1, 3]
   end
@@ -43,8 +44,9 @@ class Display
     system("clear")
     puts "Fill the grid!"
     puts "Arrow keys, WASD, or vim to move, space or enter to confirm."
-    @errors.each { |e| puts e.message }
     build_grid.each { |row| puts row.join }
+    puts "Current Piece: #{@current_piece[0].to_s.colorize({background: :light_black})}"
+    @errors.each { |e| puts e.message }
     @errors.clear
   end
 end

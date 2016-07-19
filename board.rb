@@ -58,52 +58,17 @@ class Board
     self[pos] = @nullpiece
   end
 
-  def any_between?(start, finish)
-    return false if self[start].is_a?(Knight)
-    diff_x = start[0] - finish[0]
-    diff_y = start[1] - finish[1]
-    if diff_x == diff_y
-      between_diag?(start, finish)
-    elsif diff_x == 0
-      between_horiz?(start, finish)
-    else
-      between_vert?(start, finish)
-    end
-  end
-
-  def between_diag?(start, finish)
-    row = (start[1]..finish[1] - 1).to_a
-    col = (start[0]..finish[0] - 1).to_a
-    between?(row, col)
-  end
-
-  def between_horiz?(start, finish)
-    row = (start[1]..finish[1] - 1).to_a
-    col = Array.new(row.length, start[0])
-    between?(row, col)
-  end
-
-  def between_vert?(start, finish)
-    col = (start[0]..finish[0] - 1).to_a
-    row = Array.new(col.length, start[1])
-    between?(row, col)
-  end
-
-  def between?(row, col)
-    row.each_with_index do |x, idx|
-      piece = self[[x, col[idx]]]
-      return true unless piece.is_a?(NullPiece)
-    end
-    false
-  end
-
   def in_check?(color, king_pos = nil)
     king_pos ||= get_king_position(color)
     self.each_with_position do |piece, pos|
       next if piece.color == color
-      piece_moves = piece.moves
+      if piece.is_a?(Pawn)
+        piece_moves = piece.attack_moves(pos)
+      else
+        piece_moves = piece.moves(pos)
+      end
       next unless piece_moves.include?(king_pos)
-      return true unless any_between?(pos, king_pos)
+      return true
     end
     false
   end
@@ -111,7 +76,7 @@ class Board
   def checkmate?(color)
     king_pos = get_king_position(color)
     return false unless in_check?(color)
-    self[king_pos].moves.any? {|move| in_check?(color, move)}
+    self[king_pos].moves(king_pos).any? {|move| in_check?(color, move)}
   end
 
   def get_king_position(color)
@@ -127,9 +92,9 @@ class Board
   end
 
   def each_with_position(&prc)
-    @grid.each do |row|
-      row.each do |col|
-        prc.call(self[[row,col]], [row, col])
+    @grid.each_with_index do |row, row_idx|
+      row.each_index do |col_idx|
+        prc.call(self[[row_idx,col_idx]], [row_idx, col_idx])
       end
     end
   end
