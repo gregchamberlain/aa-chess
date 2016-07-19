@@ -21,3 +21,9 @@ class BadSelectError < StandardError
     "Reset selections"
   end
 end
+
+class InCheckError < StandardError
+  def message
+    "You are in check!"
+  end
+end

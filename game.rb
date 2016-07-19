@@ -32,8 +32,11 @@ class Game
     puts "#{current_player.name}, you've lost!"
   end
 
+  private
+
   def start_play
     @current_piece[0] = nil
+    @errors << InCheckError.new if  @board.in_check?(current_player.color)
     start = current_player.get_move
     raise BadSelectError if start == :reset
     piece = @board[start]
@@ -54,12 +57,21 @@ class Game
 
   def end_play(pos)
     finish = current_player.get_move
+    in_check = @board.in_check?(current_player.color)
+    @errors << InCheckError.new if in_check
     raise BadSelectError if finish == :reset
     piece = @board[pos]
     raise InvalidMoveError unless piece.moves(pos).include?(finish)
-    piece.make_move
-    @board.take_piece(finish)
     @board.move_piece(pos, finish)
+    taken_piece = @board[finish]
+    @board.take_piece(pos)
+    if @board.in_check?(current_player.color)
+      @board.move_piece(finish, pos)
+      @board[finish] = taken_piece
+      raise BadSelectError
+    end
+    piece.make_move
+    # @board.move_piece(pos, finish)
   rescue InvalidMoveError => e
     @errors << e
     retry
@@ -85,7 +97,12 @@ class Game
   end
 
   def won?
-    # @board.checkmate?(:black) || @board.checkmate?(:white)
+    piece = @board.checkmate?(current_player.color)
+    if piece
+      require 'byebug'
+      byebug
+      return true
+    end
     false
   end
 

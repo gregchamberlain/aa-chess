@@ -16,6 +16,18 @@ class Display
     @cursor_pos[0], @cursor_pos[1] = x, y
   end
 
+  def render
+    system("clear")
+    puts "Fill the grid!"
+    puts "Arrow keys, WASD, or vim to move, space or enter to confirm."
+    build_grid.each { |row| puts row.join }
+    puts "Current Piece: #{@current_piece[0].to_s.colorize({background: :light_black})}"
+    @errors.each { |e| puts e.message }
+    @errors.clear
+  end
+
+  private
+
   def build_grid
     @board.rows.map.with_index do |row, i|
       build_row(row, i)
@@ -40,13 +52,4 @@ class Display
     { background: bg }
   end
 
-  def render
-    system("clear")
-    puts "Fill the grid!"
-    puts "Arrow keys, WASD, or vim to move, space or enter to confirm."
-    build_grid.each { |row| puts row.join }
-    puts "Current Piece: #{@current_piece[0].to_s.colorize({background: :light_black})}"
-    @errors.each { |e| puts e.message }
-    @errors.clear
-  end
 end
