@@ -20,7 +20,7 @@ class Board
     Rook
   ]
 
-  def self.emptyBoard
+  def self.emptyBoard(board)
     grid = []
     @nullpiece = NullPiece.instance
     (0..7).each do |idx1|
@@ -28,13 +28,13 @@ class Board
       (0..7).each do |idx2|
         case idx1
         when 0
-          row << FACE_PIECE[idx2].new(:white)
+          row << FACE_PIECE[idx2].new(:white, board)
         when 1
-          row << Pawn.new(:white)
+          row << Pawn.new(:white, board)
         when 6
-          row << Pawn.new(:black)
+          row << Pawn.new(:black, board)
         when 7
-          row << FACE_PIECE.reverse[idx2].new(:black)
+          row << FACE_PIECE.reverse[idx2].new(:black, board)
         else
           row << @nullpiece
         end
@@ -44,7 +44,7 @@ class Board
     grid
   end
 
-  def initialize(grid = Board.emptyBoard)
+  def initialize(grid = Board.emptyBoard(self))
     @grid = grid
   end
 

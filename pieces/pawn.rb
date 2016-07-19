@@ -4,7 +4,7 @@ class Pawn < Piece
 
   attr_reader :symbol
 
-  def initialize(color)
+  def initialize(color, board)
     super
     @symbol = "\u265F"
     @first_move = true

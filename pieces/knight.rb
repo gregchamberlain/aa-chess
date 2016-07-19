@@ -5,7 +5,7 @@ class Knight < Steppable
 
   attr_reader :symbol
 
-  def initialize(color)
+  def initialize(color, board)
     super
     @symbol = "\u265E"
   end
