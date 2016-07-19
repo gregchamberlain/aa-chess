@@ -54,13 +54,12 @@ class Board
   end
 
   def take_piece(pos)
-    # return if self[pos].is_a?(NullPiece)
     self[pos] = @nullpiece
   end
 
   def in_check?(color, king_pos = nil)
     king_pos ||= get_king_position(color)
-    self.each_with_position do |piece, pos|
+    each_with_position do |piece, pos|
       next if piece.color == color
       if piece.is_a?(Pawn)
         piece_moves = piece.attack_moves(pos)
@@ -68,7 +67,7 @@ class Board
         piece_moves = piece.moves(pos)
       end
       next unless piece_moves.include?(king_pos)
-      return true
+      return pos
     end
     false
   end
@@ -86,40 +85,23 @@ class Board
 
   def checkmate?(color)
     king_pos = get_king_position(color)
-    return false unless in_check?(color)
-    self[king_pos].moves(king_pos).any? {|move| in_check?(color, move)}
-  end
+    check_pos = in_check?(color, king_pos)
 
-  def get_king_position(color)
-    self.each_with_position do |piece, pos|
-      return pos if piece.is_a?(King) && piece.color == color
+    return false unless check_pos
+    return false unless self[king_pos].moves(king_pos).all? {|move| in_check?(color, move)}
+    each_with_position do |piece, pos|
+      next unless piece.color == color
+      next if piece.is_a?(King)
+      moves = piece.is_a?(Pawn) ? piece.possible_moves(pos) - [check_pos] : piece.moves(pos)
+      return false if moves.any? { |move| will_block?(check_pos, king_pos, move) }
     end
-  end
-
-  def each(&prc)
-    self.each_with_position do |piece, position|
-      prc.call(piece)
-    end
-  end
-
-  def each_with_position(&prc)
-    @grid.each_with_index do |row, row_idx|
-      row.each_index do |col_idx|
-        prc.call(self[[row_idx,col_idx]], [row_idx, col_idx])
-      end
-    end
+    true
   end
 
   def in_bounds?(pos)
     x, y = pos
     return false unless x.between?(0, 7) || y.between?(0, 7)
     true
-  end
-
-  def render
-    @grid.each do |row|
-      puts row.map(&:to_s).join
-    end
   end
 
   def [](pos)
@@ -136,5 +118,39 @@ class Board
   def move_piece(start, finish)
     self[start], self[finish] = self[finish], self[start]
   end
+
+  private
+
+  def each_with_position(&prc)
+    @grid.each_with_index do |row, row_idx|
+      row.each_index do |col_idx|
+        prc.call(self[[row_idx,col_idx]], [row_idx, col_idx])
+      end
+    end
+  end
+
+
+  def will_block?(start, finish, pos)
+    rows = [start[0], finish[0]]
+    cols = [start[1], finish[1]]
+    pos[0].between?(rows.min, rows.max) &&
+    pos[1].between?(cols.min, cols.max) &&
+    (start[0]-finish[0]).fdiv(start[1]-finish[1]) == (start[0]-pos[0]).fdiv(start[1]-pos[1])
+  end
+
+  def each(&prc)
+    each_with_position do |piece, position|
+      prc.call(piece)
+    end
+  end
+
+  def get_king_position(color)
+    each_with_position do |piece, pos|
+      return pos if piece.is_a?(King) && piece.color == color
+    end
+  end
+
+
+
 
 end

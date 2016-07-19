@@ -18,22 +18,7 @@ class Slidable < Piece
     end
   end
 
-  def diagonals(pos)
-    x, y = pos
-    pos.min.downto(0)
-    (0...8).to_a.inject([]) do |acc, num|
-      acc << [(x+num) % 8, (y+num) % 8]
-    end
-  end
-
-  def diagonals(pos)
-    moves = []
-    moves.concat(crawl(pos, [1,1]))
-    moves.concat(crawl(pos, [1,-1]))
-    moves.concat(crawl(pos, [-1,1]))
-    moves.concat(crawl(pos, [-1,-1]))
-    moves
-  end
+  private
 
   def crawl(pos, diff)
     new_pos = [pos[0] + diff[0], pos[1] + diff[1]]
@@ -61,4 +46,14 @@ class Slidable < Piece
     moves.concat(crawl(pos, [-1,0]))
     moves
   end
+
+  def diagonals(pos)
+    moves = []
+    moves.concat(crawl(pos, [1,1]))
+    moves.concat(crawl(pos, [1,-1]))
+    moves.concat(crawl(pos, [-1,1]))
+    moves.concat(crawl(pos, [-1,-1]))
+    moves
+  end
+
 end
