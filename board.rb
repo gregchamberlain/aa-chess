@@ -53,6 +53,7 @@ class Board
   end
 
   def any_between?(start, finish)
+    return false if self[start].is_a?(Knight)
     diff_x = start[0] - finish[0]
     diff_y = start[1] - finish[1]
     if diff_x == diff_y
@@ -65,19 +66,19 @@ class Board
   end
 
   def between_diag?(start, finish)
-    row = (start[1]..finish[1]).to_a
-    col = (start[0]..finish[0]).to_a
+    row = (start[1]..finish[1] - 1).to_a
+    col = (start[0]..finish[0] - 1).to_a
     between?(row, col)
   end
 
   def between_horiz?(start, finish)
-    row = (start[1]..finish[1]).to_a
+    row = (start[1]..finish[1] - 1).to_a
     col = Array.new(row.length, start[0])
     between?(row, col)
   end
 
   def between_vert?(start, finish)
-    col = (start[0]..finish[0]).to_a
+    col = (start[0]..finish[0] - 1).to_a
     row = Array.new(col.length, start[1])
     between?(row, col)
   end
@@ -90,12 +91,24 @@ class Board
     false
   end
 
-  def in_check?(color)
-    king = get_king(color)
-    
+  def in_check?(color, king_pos = nil)
+    king_pos ||= get_king_position(color)
+    self.each_with_position do |piece, pos|
+      next if piece.color == color
+      piece_moves = piece.moves
+      next unless piece_moves.include?(king_pos)
+      return true unless any_between?(pos, king_pos)
+    end
+    false
   end
 
-  def get_king(color)
+  def checkmate?(color)
+    king_pos = get_king_position(color)
+    return false unless in_check?(color)
+    self[king_pos].moves.any? {|move| in_check?(color, move)}
+  end
+
+  def get_king_position(color)
     self.each_with_position do |piece, pos|
       return pos if piece.is_a?(King) && piece.color == color
     end
