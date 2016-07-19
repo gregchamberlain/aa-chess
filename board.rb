@@ -46,6 +46,7 @@ class Board
 
   def initialize(grid = Board.emptyBoard(self))
     @grid = grid
+    @nullpiece = self[[2,0]]
   end
 
   def rows
@@ -53,7 +54,7 @@ class Board
   end
 
   def take_piece(pos)
-    return if self[pos].is_a?(NullPiece)
+    # return if self[pos].is_a?(NullPiece)
     self[pos] = @nullpiece
   end
 

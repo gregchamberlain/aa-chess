@@ -32,7 +32,6 @@ class Slidable < Piece
     moves.concat(crawl(pos, [1,-1]))
     moves.concat(crawl(pos, [-1,1]))
     moves.concat(crawl(pos, [-1,-1]))
-    byebug
     moves
   end
 
@@ -46,16 +45,20 @@ class Slidable < Piece
   end
 
   def rows(pos)
-    x, y = pos
-    (0...8).to_a.inject([]) do |acc, num|
-      acc << [x, (y+num) % 8]
-    end
+    moves = []
+    moves.concat(crawl(pos, [0,1]))
+    moves.concat(crawl(pos, [0,-1]))
+    moves.concat(crawl(pos, [0,1]))
+    moves.concat(crawl(pos, [0,-1]))
+    moves
   end
 
   def cols(pos)
-    x, y = pos
-    (0...8).to_a.inject([]) do |acc, num|
-      acc << [(x+num) % 8, y]
-    end
+    moves = []
+    moves.concat(crawl(pos, [1,0]))
+    moves.concat(crawl(pos, [1,0]))
+    moves.concat(crawl(pos, [-1,0]))
+    moves.concat(crawl(pos, [-1,0]))
+    moves
   end
 end

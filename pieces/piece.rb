@@ -13,7 +13,7 @@ class Piece
     " #{symbol} ".colorize(@color == :white ? :light_white : :black)
   end
 
-  def valid_move
+  def make_move
 
   end
 
