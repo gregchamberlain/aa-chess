@@ -97,13 +97,7 @@ class Game
   end
 
   def won?
-    piece = @board.checkmate?(current_player.color)
-    if piece
-      require 'byebug'
-      byebug
-      return true
-    end
-    false
+    @board.checkmate?(current_player.color)
   end
 
 

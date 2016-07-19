@@ -80,6 +80,7 @@ class Board
     return false unless self[king_pos].moves(king_pos).all? {|move| in_check?(color, move)}
     each_with_position do |piece, pos|
       next unless piece.color == color
+      next if piece.is_a?(King)
       moves = piece.is_a?(Pawn) ? piece.possible_moves(pos) - [check_pos] : piece.moves(pos)
       return false if moves.any? { |move| will_block?(check_pos, king_pos, move) }
     end
