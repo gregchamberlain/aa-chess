@@ -48,9 +48,10 @@ class Display
 
   def colors_for(i, j)
     if [i, j] == @cursor_pos
-      bg = (i+j).odd? ? :blue : :light_blue
+      bg = (i+j).odd? ? :light_blue : :light_magenta
     elsif @valid_moves.include?([i, j])
-      bg = (i+j).odd? ? :blue : :light_blue
+      bg = (i+j).odd? ? :light_blue : :light_magenta
+      bg = :light_red unless @board[[i, j]].is_a?(NullPiece)
     elsif (i + j).odd?
       bg = :light_black
     else
