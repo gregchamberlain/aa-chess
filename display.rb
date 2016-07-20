@@ -38,13 +38,19 @@ class Display
   def build_row(row, i)
     row.map.with_index do |piece, j|
       color_options = colors_for(i, j)
-      piece.to_s.colorize(color_options)
+      if @cursor_pos == [i, j] && @current_piece[0]
+        @current_piece[0].to_s.colorize({background: color_options[:background], color: :white})
+      else
+        piece.to_s.colorize(color_options)
+      end
     end
   end
 
   def colors_for(i, j)
     if [i, j] == @cursor_pos
-      bg = :light_red
+      bg = (i+j).odd? ? :blue : :light_blue
+    elsif @valid_moves.include?([i, j])
+      bg = (i+j).odd? ? :blue : :light_blue
     elsif (i + j).odd?
       bg = :light_black
     else

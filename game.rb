@@ -5,8 +5,8 @@ require_relative 'errors'
 
 class Game
 
-  def initialize(players)
-    @board = Board.new
+  def initialize(players, board = Board.new)
+    @board = board
     @errors = []
     @current_piece = [nil]
     @valid_moves = []
@@ -57,6 +57,7 @@ class Game
   def end_play(pos)
     moves = @board[pos].moves(pos)
     @valid_moves.concat(moves)
+    @display.update_pos([0,0])
     finish = current_player.get_move
     in_check = @board.in_check?(current_player.color)
     @errors << InCheckError.new if in_check
